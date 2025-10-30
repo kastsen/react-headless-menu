@@ -1,8 +1,9 @@
 import { createContext, useContext } from "react";
-import type {DesktopMenuClasses} from "@/features/DesktopMenuBar/DesktopMenu";
+import type { DesktopMenuClasses } from "./DesktopMenu";
 
 export type MenuContextType = {
-  activeItem: string | null;
+  activeItem: string;
+  activePath: string;
   openSubmenu: string | null;
   setActiveItem: (id: string, hasSubmenu?: boolean) => void;
   toggleSubmenu: (id: string) => void;

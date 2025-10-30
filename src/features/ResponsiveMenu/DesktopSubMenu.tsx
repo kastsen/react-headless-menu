@@ -1,37 +1,36 @@
-import {useEffect, useRef, useState} from "react";
-import type {FC, ReactNode} from "react";
-import {useDesktopMenuContext} from "@/features/DesktopMenuBar/DesktopMenuContext";
-import {useDesktopMenuBarContext} from "@/features/DesktopMenuBar/DesktopMenuBarContext";
-import {Link} from "react-router-dom";
+import { useEffect, useRef, useState, type FC, type ReactNode } from "react";
+import { useDesktopMenuContext } from "./DesktopMenuContext";
+import { useDesktopMenuBarContext } from "./DesktopMenuBarContext";
 import { DesktopMenuPopoverContext } from "./DesktopMenuPopoverContext";
+import { Link } from "react-router-dom";
 
 type SubMenuProps = {
   id: string;
   title: string;
   icon?: ReactNode;
-  to: string;
+  to?: string;
   children: ReactNode;
   childPaths?: string[];
 };
 
 export const DesktopSubMenu: FC<SubMenuProps> = ({
-                                                  id,
-                                                  title,
-                                                  icon,
-                                                  to,
-                                                  children,
-                                                  childPaths = [],
-                                                }) => {
-  const { activeItem, openSubmenu, toggleSubmenu, setActiveItem, desktopMenuClasses } =
+       id,
+       title,
+       icon,
+       to = "#",
+       children,
+       childPaths = [],
+                                                 }) => {
+  const { activePath, openSubmenu, toggleSubmenu, setActiveItem, desktopMenuClasses } =
       useDesktopMenuContext();
   const { collapsed } = useDesktopMenuBarContext();
 
   const [showPopover, setShowPopover] = useState(false);
   const submenuRef = useRef<HTMLDivElement>(null);
 
-  const isChildActive = childPaths.includes(activeItem!);
-  const isOpen = openSubmenu === id || isChildActive;
-  const isParentActive = isChildActive || activeItem === to;
+  const isChildActive = childPaths.includes(activePath);
+  const isParentActive = activePath === to || isChildActive;
+  const isOpen = openSubmenu === id || isParentActive;
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -44,19 +43,31 @@ export const DesktopSubMenu: FC<SubMenuProps> = ({
   }, []);
 
   const handleClick = (e: React.MouseEvent) => {
-    e.preventDefault();
     setActiveItem(to, true);
     toggleSubmenu(id);
-    if (collapsed) setShowPopover((prev) => !prev);
+    if (collapsed) {
+      e.preventDefault();
+      setShowPopover((prev) => !prev);
+    }
   };
 
   const handleMouseEnter = () => {
     if (collapsed) setShowPopover(true);
   };
-
   const handleMouseLeave = () => {
     if (collapsed) setShowPopover(false);
   };
+
+  const content = (
+      <div
+          className={`${desktopMenuClasses.subMenuTitle || ""} ${
+              isParentActive ? desktopMenuClasses.subMenuTitleActive || "" : ""
+          }`}
+      >
+        {icon}
+        {!collapsed && <span className="ml-2">{title}</span>}
+      </div>
+  );
 
   return (
       <div
@@ -65,29 +76,18 @@ export const DesktopSubMenu: FC<SubMenuProps> = ({
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
       >
-        <Link
-            to={to}
-            onClick={handleClick}
-            className="block"
-            title={collapsed ? title : undefined}
-        >
-          <div
-              className={`${desktopMenuClasses.subMenuTitle || ""} ${
-                  isParentActive ? desktopMenuClasses.subMenuTitleActive || "" : ""
-              }`}
-          >
-            {icon}
-            {!collapsed && <span className="ml-2">{title}</span>}
-          </div>
-        </Link>
-
-        {collapsed && !showPopover && desktopMenuClasses.tooltip && (
-            <div className={desktopMenuClasses.tooltip}>{title}</div>
+        {to ? (
+            <Link to={to} onClick={handleClick} className="block" title={collapsed ? title : undefined}>
+              {content}
+            </Link>
+        ) : (
+            <div onClick={handleClick}>{content}</div>
         )}
 
+        {/* Popover при collapsed */}
         {collapsed && showPopover && (
             <DesktopMenuPopoverContext.Provider value={true}>
-              <div className="relative">
+              <div className="relative z-50">
                 {desktopMenuClasses.popoverArrow && <div className={desktopMenuClasses.popoverArrow}></div>}
                 <div
                     className={desktopMenuClasses.popoverContainer || ""}
@@ -96,14 +96,13 @@ export const DesktopSubMenu: FC<SubMenuProps> = ({
                   {desktopMenuClasses.popoverHeader && (
                       <div className={desktopMenuClasses.popoverHeader}>{title}</div>
                   )}
-                  <div className={desktopMenuClasses.popoverItemContainer || ""}>
-                    {children}
-                  </div>
+                  <div className={desktopMenuClasses.popoverItemContainer || ""}>{children}</div>
                 </div>
               </div>
             </DesktopMenuPopoverContext.Provider>
         )}
 
+        {/* Подменю для десктопа, когда меню развернуто */}
         {!collapsed && isOpen && (
             <div className={desktopMenuClasses.subMenuChildren || ""}>{children}</div>
         )}

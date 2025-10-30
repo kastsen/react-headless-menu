@@ -1,5 +1,5 @@
 import type {FC, ReactNode} from "react";
-import {useMobileMenuBarContext} from "@/features/MobileMenuBar/MobileMenuBarContext";
+import {useMobileMenuBarContext} from "@/features/ResponsiveMenu/MobileMenuBarContext.tsx";
 import {X} from "lucide-react";
 
 type MobileSubMenuOverlayProps = {

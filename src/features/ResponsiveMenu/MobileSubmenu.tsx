@@ -1,5 +1,5 @@
-import type {FC, ReactNode} from "react";
-import {useMobileMenuBarContext} from "@/features/MobileMenuBar/MobileMenuBarContext";
+import type { FC, ReactNode } from "react";
+import { useMobileMenuBarContext } from "@/features/ResponsiveMenu/MobileMenuBarContext.tsx";
 
 type MobileSubmenuProps = {
   id: string;
@@ -12,7 +12,5 @@ export const MobileSubMenu: FC<MobileSubmenuProps> = ({ id, children }) => {
 
   const toggle = () => toggleSubmenu(id);
 
-  return <>
-    {children({ open, toggle })}
-  </>;
+  return <>{children({ open, toggle })}</>;
 };

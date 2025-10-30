@@ -1,6 +1,5 @@
-import {useCallback, useState} from "react";
-import type {FC, ReactNode} from "react";
-import { MobileMenuBarContext } from "./MobileMenuBarContext";
+import { useState, useCallback, type FC, type ReactNode } from "react";
+import { MobileMenuBarContext } from "./MobileMenuBarContext.tsx";
 
 export const MobileMenuBarProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);

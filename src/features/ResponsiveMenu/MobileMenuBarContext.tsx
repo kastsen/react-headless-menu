@@ -1,4 +1,4 @@
-import {createContext, useContext} from "react";
+import { createContext, useContext } from "react";
 
 export type MobileMenuBarContextType = {
   openSubmenu: string | null;
@@ -11,6 +11,6 @@ export const MobileMenuBarContext = createContext<MobileMenuBarContextType | nul
 
 export const useMobileMenuBarContext = () => {
   const ctx = useContext(MobileMenuBarContext);
-  if (!ctx) throw new Error("useMobileBottomBarContext must be used inside <MobileMenuBarProvider>");
+  if (!ctx) throw new Error("useMobileMenuBarContext must be used inside <MobileMenuBarProvider>");
   return ctx;
 };

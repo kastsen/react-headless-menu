@@ -1,6 +1,4 @@
-import {useState} from "react";
-import type {FC} from "react";
-import type { ReactNode } from "react";
+import { useState, type FC, type ReactNode } from "react";
 import { DesktopMenuBarContext } from "./DesktopMenuBarContext";
 
 type SidebarProviderProps = {

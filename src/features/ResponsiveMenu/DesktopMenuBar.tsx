@@ -1,5 +1,5 @@
-import { DesktopMenuBarProvider } from "@/features/DesktopMenuBar/DesktopMenuBarProvider";
-import { useDesktopMenuBarContext } from "@/features/DesktopMenuBar/DesktopMenuBarContext";
+import { DesktopMenuBarProvider } from "./DesktopMenuBarProvider";
+import { useDesktopMenuBarContext } from "./DesktopMenuBarContext";
 import type { FC, ReactNode } from "react";
 
 interface DesktopMenuBarProps {
